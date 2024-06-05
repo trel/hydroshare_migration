@@ -11,6 +11,7 @@
 - confirm GCP zones behaving as expected/desired
 - federate RENCI data zone with renamed GCP data zone
 - confirm connectivity with small and large files
+- update GCP Django app with new zone name
 
 ## syncing
 
@@ -24,7 +25,6 @@
 - confirm sync is up-to-date
 - open maintenance window
 - migrate Django app
-- update Django app with new zone name
 - turn on Django app
 - switch DNS?
 
