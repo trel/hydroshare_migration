@@ -1,5 +1,7 @@
 # hydroshare_migration
 
+irods version 4.2.11
+
 ## setup
 
 - two zones at RENCI - data zone and user zone
