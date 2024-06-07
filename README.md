@@ -36,3 +36,16 @@ irods version 4.2.11
 - run tests to determine sufficient success
 - close maintenance window
 
+# running code
+
+migration.py (could be core.py if there are no other python rules in play)
+
+add periodic sweeper
+```
+irule -r irods_rule_engine_plugin-python-instance migration_add_sweeper_to_queue null null
+```
+
+enqueue a single resource for syncing
+```
+irule -r irods_rule_engine_plugin-irods_rule_language-instance 'migration_sync_single_hydroshare_resource("/tempZone/home/public/555")' null null
+```
