@@ -1,3 +1,12 @@
+#################################
+# add this one line to core.py
+#################################
+#
+# from migration import *
+#
+#################################
+
+import time
 from genquery import *
 
 ############
@@ -43,3 +52,24 @@ def migration_sync_single_hydroshare_resource(rule_args, callback, rei):
     print('queuing single resource', ruletext)
     callback.delayExec(delay_condition.format('1', 'python'), ruletext, '')
 
+# Enqueue a sync for each file newer than X seconds
+def migration_sync_all_files_newer_than_x_seconds(rule_args, callback, rei):
+    global delay_condition
+    global gcp_collection
+    try:
+        seconds_ago = rule_args[0]
+    except IndexError:
+        seconds_ago = 86400 # default, 1 day
+    epoch_seconds_for_genquery = '0'+str(int(time.time() - int(seconds_ago)))
+    callback.writeLine('serverLog', 'seconds_ago [{0}]'.format(seconds_ago))
+    for result in row_iterator("COLL_NAME, DATA_NAME",
+                               "DATA_MODIFY_TIME > '{0}'".format(epoch_seconds_for_genquery),
+                               AS_LIST,
+                               callback):
+        path_to_sync = '{0}/{1}'.format(result[0], result[1])
+        parts = path_to_sync.split('/')
+        parts[1] = gcp_collection.split('/')[1]
+        target_path = '/'.join(parts)
+        ruletext = 'callback.msiDataObjRsync("{0}", "IRODS_TO_IRODS", "null", "{1}", 0);'.format(path_to_sync, target_path)
+        callback.writeLine('serverLog', 'queuing data object [{0}]'.format(ruletext))
+        callback.delayExec(delay_condition.format('1', 'python'), ruletext, '')
