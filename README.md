@@ -40,12 +40,12 @@ irods version 4.2.11
 
 migration.py (could be core.py if there are no other python rules in play)
 
-add periodic sweeper
+to enqueue files newer than x seconds
 ```
-irule -r irods_rule_engine_plugin-python-instance migration_add_sweeper_to_queue null null
+docker exec -it -u irods irods-demo-irods-catalog-provider-1 irule -r irods_rule_engine_plugin-irods_rule_language-instance "migration_sync_all_files_newer_than_x_seconds(*seconds)" '*seconds=5' null
 ```
 
-enqueue a single resource for syncing
+to enqueue files newer than x seconds (with default 86400 = 1 day)
 ```
-irule -r irods_rule_engine_plugin-irods_rule_language-instance 'migration_sync_single_hydroshare_resource("/tempZone/home/public/555")' null null
+docker exec -it -u irods irods-demo-irods-catalog-provider-1 irule -r irods_rule_engine_plugin-irods_rule_language-instance "migration_sync_all_files_newer_than_x_seconds" null null
 ```
