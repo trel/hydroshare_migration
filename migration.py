@@ -37,6 +37,7 @@ def migration_sync_all_files_newer_than_x_seconds(rule_args, callback, rei):
         parts = path_to_sync.split('/')
         parts[1] = target_zone_name
         target_path = '/'.join(parts)
-        ruletext = 'callback.msiDataObjRsync("{0}", "IRODS_TO_IRODS", "null", "{1}", 0);'.format(path_to_sync, target_path)
+#        ruletext = 'callback.msiDataObjRsync("{0}", "IRODS_TO_IRODS", "null", "{1}", 0);'.format(path_to_sync, target_path)
+        ruletext = 'callback.msiExecCmd("irsync", "i:{0} i:{1}", "null", "null", "null", 0);'.format(path_to_sync, target_path)
         callback.writeLine('serverLog', 'queuing data object [{0}]'.format(ruletext))
         callback.delayExec(delay_condition.format('1', 'python'), ruletext, '')
